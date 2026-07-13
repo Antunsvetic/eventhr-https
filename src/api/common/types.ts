@@ -1,0 +1,25 @@
+import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+
+export interface PageRequest {
+  page?: number;
+  size?: number;
+  sort?: string;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  numberOfElements: number;
+}
+
+export type QueryOptions<T> = Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>;
+export type MutationOptions<TData, TVariables, TError = Error> = Omit<
+  UseMutationOptions<TData, TError, TVariables>,
+  'mutationFn'
+>;
