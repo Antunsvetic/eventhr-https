@@ -1,5 +1,6 @@
 import type { GetEventsParams } from './events';
 import type { GetCategoriesParams } from './categories';
+import type { GetCollectionsParams } from './collections';
 import type { PageRequest } from './common/types';
 
 export const EVENTHR_QUERY_KEYS = {
@@ -11,6 +12,12 @@ export const EVENTHR_QUERY_KEYS = {
     all: ['categories'] as const,
     list: (params?: GetCategoriesParams) =>
       [...EVENTHR_QUERY_KEYS.categories.all, 'list', params] as const,
+  },
+  collections: {
+    all: ['collections'] as const,
+    list: (params?: GetCollectionsParams) =>
+      [...EVENTHR_QUERY_KEYS.collections.all, 'list', params] as const,
+    detail: (id: string) => [...EVENTHR_QUERY_KEYS.collections.all, 'detail', id] as const,
   },
   users: {
     all: ['users'] as const,

@@ -3,6 +3,7 @@ import type { InternalAxiosRequestConfig } from 'axios';
 import Events from './events';
 import Auth from './auth';
 import Categories from './categories';
+import Collections from './collections';
 import Users from './users';
 import Files from './files';
 
@@ -15,6 +16,7 @@ export class EventhrHttpClient {
   readonly Auth = Auth;
   readonly Events = Events;
   readonly Categories = Categories;
+  readonly Collections = Collections;
   readonly Users = Users;
   readonly Files = Files;
 

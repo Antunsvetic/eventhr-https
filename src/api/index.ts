@@ -18,6 +18,12 @@ export * from './categories/categories.hooks';
 export * from './categories/categories.cache';
 export { default as Categories } from './categories';
 
+// Collections
+export * from './collections';
+export * from './collections/collections.hooks';
+export * from './collections/collections.cache';
+export { default as Collections } from './collections';
+
 // Users
 export * from './users';
 export * from './users/users.hooks';
