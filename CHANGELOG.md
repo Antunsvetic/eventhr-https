@@ -1,5 +1,11 @@
 # eventhr-http-client
 
+## 0.1.1
+
+### Patch Changes
+
+- eaf9bd1: Fix npm publishing configuration with proper permissions and non-scoped package name.
+
 ## 0.1.0
 
 ### Minor Changes
