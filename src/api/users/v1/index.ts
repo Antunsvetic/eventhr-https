@@ -2,6 +2,8 @@ import { HttpClient } from '@/api/common/HttpClient';
 import type { PageRequest, Page } from '@/api/common/types';
 
 
+export type UserRole = 'ADMIN' | 'CUSTOMER' | 'PRIVATE_ORGANIZER' | 'PUBLIC_ORGANIZER' | 'SUB_ORGANIZER';
+
 export interface User {
   id: string;
   name: string;
@@ -9,12 +11,21 @@ export interface User {
   imageId?: string;
   createdAt: string;
   updatedAt: string;
+  emailVerified: boolean;
+  onboarded: boolean;
 }
 
 export interface CreateUserDto {
   name: string;
   username: string;
   password: string;
+}
+
+export interface CreateOrganizerUserDto {
+  name: string;
+  username: string;
+  password: string;
+  userRole: UserRole;
 }
 
 export interface EditUserDto {
@@ -39,6 +50,18 @@ class UsersClient extends HttpClient {
 
   create(data: CreateUserDto) {
     return this.client.post<void>(this.endpoint, data);
+  }
+
+  createOrganizer(data: CreateOrganizerUserDto) {
+    return this.client.post<void>(`${this.endpoint}/organizer`, data);
+  }
+
+  createSubOrganizer(data: CreateUserDto) {
+    return this.client.post<void>(`${this.endpoint}/sub-organizer`, data);
+  }
+
+  verify(userId: string) {
+    return this.client.patch<void>(`${this.endpoint}/${userId}/verify`);
   }
 
   edit(id: string, data: EditUserDto) {

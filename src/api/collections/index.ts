@@ -2,7 +2,6 @@ import v1 from './v1';
 
 export type {
   Collection,
-  EventVo,
   CreateCollectionDto,
   UpdateCollectionDto,
   GetCollectionsParams,

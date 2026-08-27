@@ -1,21 +1,73 @@
 import { HttpClient } from '@/api/common/HttpClient';
-import type { PageRequest, Page } from '@/api/common/types';
+import type { BaseValueObject, Coordinates, CountryVo, FileVo, PageRequest, Page } from '@/api/common/types';
 
 
 export interface EventAddress {
-  city: string;
+  countryVo?: CountryVo;
   address: string;
   postalCode?: string;
   locationName?: string;
 }
 
-export interface EventCoordinates {
-  latitude: number;
-  longitude: number;
+export interface EventAddressDto {
+  cityId: string;
+  address: string;
+  postalCode?: string;
+  locationName?: string;
 }
 
-export interface EventOrganizer {
+export type EventFeature =
+  | 'FREE_ENTRY'
+  | 'PAID_ENTRY'
+  | 'RESERVATION_REQUIRED'
+  | 'INDOOR'
+  | 'OUTDOOR'
+  | 'FREE_PARKING_NEARBY'
+  | 'PAID_PARKING_NEARBY'
+  | 'NO_PARKING_AVAILABLE'
+  | 'PUBLIC_TRANSPORT_NEARBY'
+  | 'WHEELCHAIR_ACCESSIBLE'
+  | 'ACCESSIBLE_RESTROOM'
+  | 'FAMILY_FRIENDLY'
+  | 'PET_FRIENDLY'
+  | 'FOOD_AVAILABLE'
+  | 'DRINKS_AVAILABLE'
+  | 'VEGAN_VEGETARIAN_OPTIONS'
+  | 'CARD_PAYMENT_AVAILABLE'
+  | 'CASH_ONLY'
+  | 'NON_SMOKING'
+  | 'SMOKING_ALLOWED'
+  | 'ADULTS_ONLY_18_PLUS'
+  | 'CLOAKROOM_AVAILABLE'
+  | 'BABY_CHANGING_FACILITY';
+
+export interface SubEvent {
   id: string;
+  name: string;
+  description?: string;
+  startAt: string;
+  endAt: string;
+  address: EventAddress;
+  coordinates: Coordinates;
+  price?: number;
+  capacity?: number;
+  images: FileVo[];
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SubEventDto {
+  id?: string;
+  name: string;
+  description?: string;
+  startAt: string;
+  endAt: string;
+  address: EventAddressDto;
+  coordinates: Coordinates;
+  price?: number;
+  capacity?: number;
+  imageIds?: string[];
 }
 
 export interface Event {
@@ -25,10 +77,15 @@ export interface Event {
   startAt: string;
   endAt: string;
   address: EventAddress;
-  coordinates: EventCoordinates;
+  coordinates: Coordinates;
   price?: number;
   capacity?: number;
-  organizer: EventOrganizer;
+  organizer: BaseValueObject;
+  category: BaseValueObject;
+  features?: EventFeature[];
+  attendeeCount?: number;
+  images?: FileVo[];
+  subEvents?: SubEvent[];
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
@@ -39,10 +96,15 @@ export interface CreateEventDto {
   description?: string;
   startAt: string;
   endAt: string;
-  address: EventAddress;
-  coordinates: EventCoordinates;
-  price?: number;
+  address: EventAddressDto;
+  coordinates: Coordinates;
+  price: number;
   capacity?: number;
+  imageIds?: string[];
+  subEvents?: SubEventDto[];
+  features?: EventFeature[];
+  categoryId: string;
+  subOrganizerId?: string;
 }
 
 export type UpdateEventDto = CreateEventDto;
@@ -61,6 +123,10 @@ class EventsClient extends HttpClient {
 
   getAll(params?: GetEventsParams) {
     return this.client.get<Page<Event>>(this.endpoint, { params });
+  }
+
+  getById(id: string) {
+    return this.client.get<Event>(`${this.endpoint}/${id}`);
   }
 
   create(data: CreateEventDto) {

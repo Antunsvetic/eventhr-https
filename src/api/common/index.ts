@@ -1,2 +1,2 @@
 export { HttpClient } from './HttpClient';
-export type { Page, PageRequest, QueryOptions, MutationOptions } from './types';
+export type { BaseValueObject, FileVo, Coordinates, CountryVo, Page, PageRequest, QueryOptions, MutationOptions } from './types';

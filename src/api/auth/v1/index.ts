@@ -16,6 +16,19 @@ export interface RefreshTokenDto {
   refreshToken: string;
 }
 
+export type SocialProvider = 'GOOGLE' | 'FACEBOOK';
+
+export interface SocialAuthDto {
+  provider: SocialProvider;
+  token: string;
+}
+
+export interface SocialAuthResponse {
+  email: string;
+  name: string;
+  provider: string;
+}
+
 
 
 class AuthClient extends HttpClient {
@@ -23,6 +36,10 @@ class AuthClient extends HttpClient {
 
   login(data: LoginDto) {
     return this.client.post<AuthTokenResponse>(this.endpoint, data);
+  }
+
+  social(data: SocialAuthDto) {
+    return this.client.post<SocialAuthResponse>(`${this.endpoint}/social`, data);
   }
 
   refresh(data: RefreshTokenDto) {

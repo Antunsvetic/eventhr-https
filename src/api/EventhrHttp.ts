@@ -6,6 +6,12 @@ import Categories from './categories';
 import Collections from './collections';
 import Users from './users';
 import Files from './files';
+import Onboardings from './onboardings';
+import EventAttendances from './event-attendances';
+import ForgotPassword from './forgot-password';
+import Countries from './countries';
+import Counties from './counties';
+import Cities from './cities';
 
 export interface EventhrHttpConfig {
   baseUrl?: string;
@@ -19,6 +25,12 @@ export class EventhrHttpClient {
   readonly Collections = Collections;
   readonly Users = Users;
   readonly Files = Files;
+  readonly Onboardings = Onboardings;
+  readonly EventAttendances = EventAttendances;
+  readonly ForgotPassword = ForgotPassword;
+  readonly Countries = Countries;
+  readonly Counties = Counties;
+  readonly Cities = Cities;
 
   configure({ baseUrl, headers }: EventhrHttpConfig): void {
     if (baseUrl !== undefined) {

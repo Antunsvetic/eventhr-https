@@ -1,18 +1,11 @@
 import { HttpClient } from '@/api/common/HttpClient';
-import type { PageRequest, Page } from '@/api/common/types';
-
-export interface EventVo {
-  id: string;
-  name: string;
-}
+import type { BaseValueObject, PageRequest, Page } from '@/api/common/types';
 
 export interface Collection {
   id: string;
   name: string;
-  customer: {
-    id: string;
-  };
-  events: EventVo[];
+  customer: BaseValueObject;
+  events: BaseValueObject[];
   createdAt: string;
   updatedAt: string;
 }

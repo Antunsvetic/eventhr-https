@@ -20,6 +20,19 @@ export const useGetEventsQuery = (
     ...options,
   });
 
+export const useGetEventByIdQuery = (
+  id: string,
+  options?: QueryOptions<Event>,
+) =>
+  useQuery({
+    queryKey: EVENTHR_QUERY_KEYS.events.detail(id),
+    queryFn: async () => {
+      const response = await Events.v1.getById(id);
+      return response.data;
+    },
+    ...options,
+  });
+
 
 
 export const useCreateEventMutation = (

@@ -220,10 +220,12 @@ await EventhrHttp.Users.v1.edit(userId, {
 
 ### Auth
 - `login(data: LoginDto)` - Authenticate user
+- `social(data: SocialAuthDto)` - Authenticate with social provider (Google/Facebook)
 - `refresh(data: RefreshTokenDto)` - Refresh access token
 
 ### Events
 - `getAll(params?: GetEventsParams)` - Get paginated events with filters
+- `getById(id: string)` - Get event by ID
 - `create(data: CreateEventDto)` - Create new event
 - `update(id: string, data: UpdateEventDto)` - Update event
 - `remove(id: string)` - Delete event
@@ -249,7 +251,36 @@ await EventhrHttp.Users.v1.edit(userId, {
 - `getAll(params?: PageRequest)` - Get paginated users
 - `getProfile()` - Get current user profile
 - `create(data: CreateUserDto)` - Create user
+- `createOrganizer(data: CreateOrganizerUserDto)` - Create organizer user
+- `createSubOrganizer(data: CreateUserDto)` - Create sub-organizer user
+- `verify(userId: string)` - Verify user
 - `edit(id: string, data: EditUserDto)` - Edit user
+
+### Onboardings
+- `getByUser()` - Get current user's onboarding
+- `create(data: CreateOnboardingDto)` - Create onboarding
+- `update(data: UpdateOnboardingDto)` - Update onboarding
+
+### Event Attendances
+- `getAll(params?: GetEventAttendancesParams)` - Get paginated event attendances
+- `create(data: CreateEventAttendanceDto)` - Create event attendance
+- `remove(id: string)` - Delete event attendance
+
+### Forgot Password
+- `create(data: ForgotPasswordCreateDto)` - Request password reset
+- `changePassword(id: string, data: ChangeForgotPasswordDto)` - Change password with reset token
+
+### Countries
+- `getAll(params?: GetCountriesParams)` - Get paginated countries
+- `getById(id: string)` - Get country by ID
+
+### Counties
+- `getAll(params?: GetCountiesParams)` - Get paginated counties
+- `getById(id: string)` - Get county by ID
+
+### Cities
+- `getAll(params?: GetCitiesParams)` - Get paginated cities
+- `getById(id: string)` - Get city by ID
 
 ## Configuration
 

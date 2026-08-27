@@ -1,5 +1,26 @@
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 
+export interface BaseValueObject {
+  id: string;
+  name: string;
+}
+
+export interface FileVo {
+  id: string;
+  url: string;
+}
+
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export interface CountryVo {
+  country: BaseValueObject;
+  county: BaseValueObject;
+  city: BaseValueObject;
+}
+
 export interface PageRequest {
   page?: number;
   size?: number;
