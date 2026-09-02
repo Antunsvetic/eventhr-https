@@ -52,22 +52,11 @@ export interface SubEvent {
   price?: number;
   capacity?: number;
   images: FileVo[];
+  features?: EventFeature[];
+  attendeeCount?: number;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface SubEventDto {
-  id?: string;
-  name: string;
-  description?: string;
-  startAt: string;
-  endAt: string;
-  address: EventAddressDto;
-  coordinates: Coordinates;
-  price?: number;
-  capacity?: number;
-  imageIds?: string[];
 }
 
 export interface Event {
@@ -85,6 +74,7 @@ export interface Event {
   features?: EventFeature[];
   attendeeCount?: number;
   images?: FileVo[];
+  parentEvent?: BaseValueObject;
   subEvents?: SubEvent[];
   isDeleted: boolean;
   createdAt: string;
@@ -101,10 +91,10 @@ export interface CreateEventDto {
   price: number;
   capacity?: number;
   imageIds?: string[];
-  subEvents?: SubEventDto[];
   features?: EventFeature[];
   categoryId: string;
   subOrganizerId?: string;
+  parentEventId?: string;
 }
 
 export type UpdateEventDto = CreateEventDto;

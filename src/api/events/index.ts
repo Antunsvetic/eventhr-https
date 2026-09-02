@@ -6,7 +6,6 @@ export type {
   EventAddressDto,
   EventFeature,
   SubEvent,
-  SubEventDto,
   CreateEventDto,
   UpdateEventDto,
   GetEventsParams,
