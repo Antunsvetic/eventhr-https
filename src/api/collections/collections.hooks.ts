@@ -1,7 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EVENTHR_QUERY_KEYS } from '@/api/eventhrKeys';
 import type { MutationOptions, Page, QueryOptions } from '@/api/common/types';
+import type { Event } from '@/api/events';
 import type { Collection, CreateCollectionDto, GetCollectionsParams, UpdateCollectionDto } from './v1';
 import Collections from './index';
 
@@ -62,3 +63,67 @@ export const useDeleteCollectionMutation = (
     },
     ...options,
   });
+
+type SaveEventVariables = { id: string; eventId: string; data: UpdateCollectionDto };
+type SaveEventContext = {
+  previousLists: Array<[readonly unknown[], Page<Event> | undefined]>;
+  previousDetail: Event | undefined;
+};
+
+export const useSaveEventMutation = (
+  options?: MutationOptions<void, SaveEventVariables>,
+) => {
+  const queryClient = useQueryClient();
+  const { onMutate, onError, onSettled, ...restOptions } = options ?? {};
+
+  return useMutation<void, Error, SaveEventVariables, SaveEventContext>({
+    mutationFn: async ({ id, data }) => {
+      await Collections.v1.update(id, data);
+    },
+    onMutate: async (variables, mutationContext) => {
+      const { eventId } = variables;
+      const listKey = [...EVENTHR_QUERY_KEYS.events.all, 'list'];
+
+      await queryClient.cancelQueries({ queryKey: EVENTHR_QUERY_KEYS.events.all });
+
+      const previousLists = queryClient.getQueriesData<Page<Event>>({ queryKey: listKey });
+
+      queryClient.setQueriesData<Page<Event>>({ queryKey: listKey }, (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          content: oldData.content.map((event) =>
+            event.id === eventId ? { ...event, isSaved: !event.isSaved } : event,
+          ),
+        };
+      });
+
+      const detailKey = EVENTHR_QUERY_KEYS.events.detail(eventId);
+      const previousDetail = queryClient.getQueryData<Event>(detailKey);
+      if (previousDetail) {
+        queryClient.setQueryData<Event>(detailKey, { ...previousDetail, isSaved: !previousDetail.isSaved });
+      }
+
+      await onMutate?.(variables, mutationContext);
+
+      return { previousLists, previousDetail };
+    },
+    onError: (error, variables, onMutateResult, mutationContext) => {
+      onMutateResult?.previousLists.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+      if (onMutateResult?.previousDetail) {
+        queryClient.setQueryData(
+          EVENTHR_QUERY_KEYS.events.detail(variables.eventId),
+          onMutateResult.previousDetail,
+        );
+      }
+      onError?.(error, variables, onMutateResult, mutationContext);
+    },
+    onSettled: (data, error, variables, onMutateResult, mutationContext) => {
+      queryClient.invalidateQueries({ queryKey: EVENTHR_QUERY_KEYS.collections.all });
+      onSettled?.(data, error, variables, onMutateResult, mutationContext);
+    },
+    ...restOptions,
+  });
+};

@@ -57,6 +57,7 @@ export interface SubEvent {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  isSaved: boolean;
 }
 
 export interface Event {
@@ -79,6 +80,7 @@ export interface Event {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  isSaved: boolean;
 }
 
 export interface CreateEventDto {
