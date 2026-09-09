@@ -12,7 +12,7 @@ export interface Collection {
 
 export interface CreateCollectionDto {
   name: string;
-  eventIds: string[];
+  eventIds?: string[];
 }
 
 export interface UpdateCollectionDto {
