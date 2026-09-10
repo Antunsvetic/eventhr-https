@@ -64,6 +64,16 @@ export const useDeleteCollectionMutation = (
     ...options,
   });
 
+export const useRemoveEventFromCollectionsMutation = (
+  options?: MutationOptions<void, { eventId: string }>,
+) =>
+  useMutation({
+    mutationFn: async ({ eventId }: { eventId: string }) => {
+      await Collections.v1.removeEvent(eventId);
+    },
+    ...options,
+  });
+
 type SaveEventVariables = { id: string; eventId: string; data: UpdateCollectionDto };
 type SaveEventContext = {
   previousLists: Array<[readonly unknown[], Page<Event> | undefined]>;

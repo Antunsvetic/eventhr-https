@@ -46,6 +46,10 @@ class CollectionsClient extends HttpClient {
   remove(id: string) {
     return this.client.delete<void>(`${this.endpoint}/${id}`);
   }
+
+  removeEvent(eventId: string) {
+    return this.client.delete<void>(`${this.endpoint}/events/${eventId}`);
+  }
 }
 
 const v1 = new CollectionsClient();
