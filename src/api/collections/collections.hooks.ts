@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EVENTHR_QUERY_KEYS } from '@/api/eventhrKeys';
 import type { MutationOptions, Page, QueryOptions } from '@/api/common/types';
-import type { Event } from '@/api/events';
+import { createOptimisticIsSavedUpdater, createIsSavedRollback, type EventSavedContext } from '@/api/events/events.cache';
 import type { Collection, CreateCollectionDto, GetCollectionsParams, UpdateCollectionDto } from './v1';
 import Collections from './index';
 
@@ -64,21 +64,34 @@ export const useDeleteCollectionMutation = (
     ...options,
   });
 
+function createCollectionsInvalidator<TVariables>(
+  queryClient: ReturnType<typeof useQueryClient>,
+  userOnSettled?: MutationOptions<void, TVariables>['onSettled'],
+) {
+  return (data: void | undefined, error: Error | null, variables: TVariables, onMutateResult: EventSavedContext | undefined, mutationContext: unknown) => {
+    queryClient.invalidateQueries({ queryKey: EVENTHR_QUERY_KEYS.collections.all });
+    userOnSettled?.(data, error, variables, onMutateResult, mutationContext as never);
+  };
+}
+
 export const useRemoveEventFromCollectionsMutation = (
   options?: MutationOptions<void, { eventId: string }>,
-) =>
-  useMutation({
-    mutationFn: async ({ eventId }: { eventId: string }) => {
+) => {
+  const queryClient = useQueryClient();
+  const { onMutate, onError, onSettled, ...restOptions } = options ?? {};
+
+  return useMutation<void, Error, { eventId: string }, EventSavedContext>({
+    mutationFn: async ({ eventId }) => {
       await Collections.v1.removeEvent(eventId);
     },
-    ...options,
+    onMutate: createOptimisticIsSavedUpdater(queryClient, false, onMutate),
+    onError: createIsSavedRollback(queryClient, onError),
+    onSettled: createCollectionsInvalidator(queryClient, onSettled),
+    ...restOptions,
   });
+};
 
 type SaveEventVariables = { id: string; eventId: string; data: UpdateCollectionDto };
-type SaveEventContext = {
-  previousLists: Array<[readonly unknown[], Page<Event> | undefined]>;
-  previousDetail: Event | undefined;
-};
 
 export const useSaveEventMutation = (
   options?: MutationOptions<void, SaveEventVariables>,
@@ -86,54 +99,13 @@ export const useSaveEventMutation = (
   const queryClient = useQueryClient();
   const { onMutate, onError, onSettled, ...restOptions } = options ?? {};
 
-  return useMutation<void, Error, SaveEventVariables, SaveEventContext>({
+  return useMutation<void, Error, SaveEventVariables, EventSavedContext>({
     mutationFn: async ({ id, data }) => {
       await Collections.v1.update(id, data);
     },
-    onMutate: async (variables, mutationContext) => {
-      const { eventId } = variables;
-      const listKey = [...EVENTHR_QUERY_KEYS.events.all, 'list'];
-
-      await queryClient.cancelQueries({ queryKey: EVENTHR_QUERY_KEYS.events.all });
-
-      const previousLists = queryClient.getQueriesData<Page<Event>>({ queryKey: listKey });
-
-      queryClient.setQueriesData<Page<Event>>({ queryKey: listKey }, (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          content: oldData.content.map((event) =>
-            event.id === eventId ? { ...event, isSaved: !event.isSaved } : event,
-          ),
-        };
-      });
-
-      const detailKey = EVENTHR_QUERY_KEYS.events.detail(eventId);
-      const previousDetail = queryClient.getQueryData<Event>(detailKey);
-      if (previousDetail) {
-        queryClient.setQueryData<Event>(detailKey, { ...previousDetail, isSaved: !previousDetail.isSaved });
-      }
-
-      await onMutate?.(variables, mutationContext);
-
-      return { previousLists, previousDetail };
-    },
-    onError: (error, variables, onMutateResult, mutationContext) => {
-      onMutateResult?.previousLists.forEach(([queryKey, data]) => {
-        queryClient.setQueryData(queryKey, data);
-      });
-      if (onMutateResult?.previousDetail) {
-        queryClient.setQueryData(
-          EVENTHR_QUERY_KEYS.events.detail(variables.eventId),
-          onMutateResult.previousDetail,
-        );
-      }
-      onError?.(error, variables, onMutateResult, mutationContext);
-    },
-    onSettled: (data, error, variables, onMutateResult, mutationContext) => {
-      queryClient.invalidateQueries({ queryKey: EVENTHR_QUERY_KEYS.collections.all });
-      onSettled?.(data, error, variables, onMutateResult, mutationContext);
-    },
+    onMutate: createOptimisticIsSavedUpdater(queryClient, 'toggle', onMutate),
+    onError: createIsSavedRollback(queryClient, onError),
+    onSettled: createCollectionsInvalidator(queryClient, onSettled),
     ...restOptions,
   });
 };
