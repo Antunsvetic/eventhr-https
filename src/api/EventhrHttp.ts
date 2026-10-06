@@ -12,6 +12,11 @@ import ForgotPassword from './forgot-password';
 import Countries from './countries';
 import Counties from './counties';
 import Cities from './cities';
+import Ads from './ads';
+import Feed from './feed';
+import Follows from './follows';
+import Organizers from './organizers';
+import Search from './search';
 
 export interface EventhrHttpConfig {
   baseUrl?: string;
@@ -31,6 +36,11 @@ export class EventhrHttpClient {
   readonly Countries = Countries;
   readonly Counties = Counties;
   readonly Cities = Cities;
+  readonly Ads = Ads;
+  readonly Feed = Feed;
+  readonly Follows = Follows;
+  readonly Organizers = Organizers;
+  readonly Search = Search;
 
   configure({ baseUrl, headers }: EventhrHttpConfig): void {
     if (baseUrl !== undefined) {

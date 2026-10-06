@@ -9,6 +9,7 @@ export interface User {
   name: string;
   username: string;
   imageId?: string;
+  role: UserRole;
   createdAt: string;
   updatedAt: string;
   emailVerified: boolean;
@@ -35,12 +36,16 @@ export interface EditUserDto {
   imageId?: string;
 }
 
+export interface GetUsersParams extends PageRequest {
+  userRole?: UserRole;
+}
+
 
 
 class UsersClient extends HttpClient {
   endpoint = 'api/v1/users';
 
-  getAll(params?: PageRequest) {
+  getAll(params?: GetUsersParams) {
     return this.client.get<Page<User>>(this.endpoint, { params });
   }
 

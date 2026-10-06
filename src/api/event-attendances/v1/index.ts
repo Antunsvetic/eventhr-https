@@ -15,7 +15,7 @@ export interface CreateEventAttendanceDto {
 }
 
 export interface GetEventAttendancesParams extends PageRequest {
-  'event-id'?: string;
+  eventId?: string;
 }
 
 

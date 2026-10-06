@@ -10,7 +10,7 @@ export interface County {
 
 export interface GetCountiesParams extends PageRequest {
   name?: string;
-  'country-id'?: string;
+  countryId?: string;
 }
 
 

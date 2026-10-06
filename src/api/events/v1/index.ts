@@ -57,7 +57,6 @@ export interface SubEvent {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-  isSaved: boolean;
 }
 
 export interface Event {
@@ -96,7 +95,7 @@ export interface CreateEventDto {
   features?: EventFeature[];
   categoryId: string;
   subOrganizerId?: string;
-  parentEventId?: string;
+  subEvents?: string[];
 }
 
 export type UpdateEventDto = CreateEventDto;
@@ -106,6 +105,16 @@ export interface GetEventsParams extends PageRequest {
   latitude?: number;
   longitude?: number;
   radiusKm?: number;
+  organizerId?: string;
+  subOrganizerId?: string;
+  features?: EventFeature[];
+  cityId?: string;
+  countyId?: string;
+  countryId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  categoryId?: string;
+  sortByAttendeeCount?: boolean;
 }
 
 

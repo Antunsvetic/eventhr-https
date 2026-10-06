@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { EVENTHR_QUERY_KEYS } from '@/api/eventhrKeys';
-import type { MutationOptions, Page, PageRequest, QueryOptions } from '@/api/common/types';
-import type { CreateUserDto, CreateOrganizerUserDto, EditUserDto, User } from './v1';
+import type { MutationOptions, Page, QueryOptions } from '@/api/common/types';
+import type { CreateUserDto, CreateOrganizerUserDto, EditUserDto, GetUsersParams, User } from './v1';
 import Users from './index';
 
 
 
 export const useGetUsersQuery = (
-  params?: PageRequest,
+  params?: GetUsersParams,
   options?: QueryOptions<Page<User>>,
 ) =>
   useQuery({

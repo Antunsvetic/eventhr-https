@@ -24,15 +24,32 @@ export interface CountryVo {
 export interface PageRequest {
   page?: number;
   size?: number;
-  sort?: string;
+  sort?: string | string[];
+}
+
+export interface SortObject {
+  sorted: boolean;
+  empty: boolean;
+  unsorted: boolean;
+}
+
+export interface PageableObject {
+  paged: boolean;
+  pageNumber: number;
+  pageSize: number;
+  offset: number;
+  sort: SortObject;
+  unpaged: boolean;
 }
 
 export interface Page<T> {
   content: T[];
   totalElements: number;
   totalPages: number;
+  pageable: PageableObject;
   number: number;
   size: number;
+  sort: SortObject;
   first: boolean;
   last: boolean;
   empty: boolean;

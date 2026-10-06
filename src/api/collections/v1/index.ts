@@ -17,7 +17,7 @@ export interface CreateCollectionDto {
 
 export interface UpdateCollectionDto {
   name: string;
-  eventIds: string[];
+  eventIds?: string[];
 }
 
 export interface GetCollectionsParams extends PageRequest {

@@ -11,8 +11,8 @@ export interface City {
 
 export interface GetCitiesParams extends PageRequest {
   name?: string;
-  'country-id'?: string;
-  'county-id'?: string;
+  countryId?: string;
+  countyId?: string;
 }
 
 

@@ -5,6 +5,7 @@ const instance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  paramsSerializer: { indexes: null },
 });
 
 export const setBaseUrl = (url: string): void => {

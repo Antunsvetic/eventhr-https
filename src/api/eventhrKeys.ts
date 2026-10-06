@@ -5,6 +5,8 @@ import type { GetCountriesParams } from './countries';
 import type { GetCountiesParams } from './counties';
 import type { GetCitiesParams } from './cities';
 import type { GetEventAttendancesParams } from './event-attendances';
+import type { GetAdsParams } from './ads';
+import type { GetUsersParams } from './users';
 import type { PageRequest } from './common/types';
 
 export const EVENTHR_QUERY_KEYS = {
@@ -26,7 +28,7 @@ export const EVENTHR_QUERY_KEYS = {
   },
   users: {
     all: ['users'] as const,
-    list: (params?: PageRequest) => [...EVENTHR_QUERY_KEYS.users.all, 'list', params] as const,
+    list: (params?: GetUsersParams) => [...EVENTHR_QUERY_KEYS.users.all, 'list', params] as const,
     profile: () => [...EVENTHR_QUERY_KEYS.users.all, 'profile'] as const,
   },
   files: {
@@ -58,5 +60,25 @@ export const EVENTHR_QUERY_KEYS = {
     list: (params?: GetCitiesParams) =>
       [...EVENTHR_QUERY_KEYS.cities.all, 'list', params] as const,
     detail: (id: string) => [...EVENTHR_QUERY_KEYS.cities.all, 'detail', id] as const,
+  },
+  ads: {
+    all: ['ads'] as const,
+    list: (params?: GetAdsParams) => [...EVENTHR_QUERY_KEYS.ads.all, 'list', params] as const,
+  },
+  feed: {
+    all: ['feed'] as const,
+  },
+  follows: {
+    all: ['follows'] as const,
+    list: (params?: PageRequest) => [...EVENTHR_QUERY_KEYS.follows.all, 'list', params] as const,
+  },
+  organizers: {
+    all: ['organizers'] as const,
+    list: (params?: PageRequest) => [...EVENTHR_QUERY_KEYS.organizers.all, 'list', params] as const,
+    detail: (id: string) => [...EVENTHR_QUERY_KEYS.organizers.all, 'detail', id] as const,
+  },
+  search: {
+    all: ['search'] as const,
+    query: (query: string) => [...EVENTHR_QUERY_KEYS.search.all, 'query', query] as const,
   },
 } as const;
